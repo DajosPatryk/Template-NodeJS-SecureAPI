@@ -3,18 +3,18 @@ This is a basic template/example for a restful API server developed in Node.js b
 I kept env variables and secrets on GitHub for testing purposes 📐✏️👷‍♀️<br/>
 
 ## Technology used
-- Express.js framework
-- Cors
-- Morgan development environment logger
-- Winston file-logger
-- Json-Web-Token signatures
-- bcrypt hashing
-- Express-Rate-Limit protection
-- Prisma ORM **+ Prevents all injections**
-- MongoDB Atlas cloud database based in Frankfurt
-- Jest unit testing & TS-Jest
-- Jest-Mock-Extended
-- Swagger API documentation
+- **Express.js** - framework
+- **Cors**
+- **Morgan** - development environment logger
+- **Winston** - file-logger
+- **Json-Web-Token** - signatures
+- **bcrypt** - hashing
+- **Express-Rate-Limit** - protection
+- **Prisma ORM** - **lightweight mapper that prevents all injections**
+- **MongoDB Atlas** - cloud database based in Frankfurt
+- **Jest unit testing** & **TS-Jest**
+- **Jest-Mock-Extended**
+- **Swagger** - Live documentation
 
 ## Features
 - **Basic security features** - JWT-HS512, bcrypt with 10 salt rounds for passwords, Cors, Data sanitizing, injection prevention, rate-limiting, vague error responses and extensive logging for monitoring purposes.
@@ -22,7 +22,7 @@ I kept env variables and secrets on GitHub for testing purposes 📐✏️👷�
 - **User** - Get operation with mapping.
 - **Team** - CRUD operations with basic validation and mapping. Specific team requests also return team members.
 - **Team Join-Requests** - Get, Create, Accept and Delete operations with basic validation and mapping.
-- **Jest testing** - Jest unit tests covering 90% of the app.
+- **Jest testing** - Jest unit tests covering ~90% of the app.
 - **Swagger documentation** - Swagger documentation ready for testing.
 - **Heroku-Ready configuration** - Configured a basic Heroku-ready Procfile.
 - **Pipeline configuration** - Configured a basic GitHub-ready pipeline for testing.
