@@ -58,7 +58,7 @@ class Result {
     /**
      * Returns failure Result with errors mapped for presentation.
      * @param {Result<{value: any, error: Array<Error>}>} result - Result to fail.
-     * @returns {Result} - Returns failure Result.
+     * @returns {Result} - Returns failed Result.
      */
     static fail(result){
         const errors = result.error.map(err => err.external ? err.external : { code: 500, message: err.message });
