@@ -1,6 +1,6 @@
 # Example Restful-API in Node.js
 This is an example API server developed to showcase my skills in Node.js backend 🌱<br/>
-I kept env variables on GitHub for testing purposes.
+I kept env variables and secrets on GitHub for testing purposes.
 
 ## Technology used
 - Express.js framework
@@ -30,10 +30,12 @@ I kept env variables on GitHub for testing purposes.
 - **Docker configuration** - Configured Docker-ready Dockerfile.
 
 ## How to run
+- cd ./server
 - npm i
 - npm build
 - npm start
 #### **OR**
+- cd ./server
 - docker build -t example-restfulapi-nodejs .
 - docker run -p 3000:3000 example-restfulapi-nodejs
 

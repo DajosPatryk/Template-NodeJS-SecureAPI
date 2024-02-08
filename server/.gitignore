@@ -1,3 +1,4 @@
 node_modules
 log
+coverage
 # We keep env variables on github in this special case

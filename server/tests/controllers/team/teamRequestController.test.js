@@ -94,6 +94,18 @@ describe("createTeamRequest function", () => {
         expect(result.error[0].message).toBe("User does not exist.");
     });
 
+    it("should throw an error if team request is not unique", async () => {
+        prismaMock.teamRequest.findUnique.mockResolvedValueOnce(mockedTeamRequestOutput);
+        prismaMock.user.findUnique.mockResolvedValueOnce(mockedJoinerOutput);
+        prismaMock.team.findUnique.mockResolvedValueOnce(mockedTeamOutput);
+        prismaMock.teamRequest.create.mockResolvedValueOnce(mockedTeamRequestOutput);
+
+        const result = await createTeamRequest(mockedJoinerInput.email, mockedJoinerInput.name, "Please let me join");
+
+        expect(result.isError()).toBe(true);
+        expect(result.error[0].message).toBe("Team request already exists.");
+    });
+
     it("should create a team request successfully", async () => {
         prismaMock.user.findUnique.mockResolvedValueOnce(mockedJoinerOutput);
         prismaMock.team.findUnique.mockResolvedValueOnce(mockedTeamOutput);
@@ -157,6 +169,15 @@ describe("deleteTeamRequest function", () => {
 });
 
 describe("getAllTeamRequests function", () => {
+    it("should throw an error if team does not exist", async () => {
+        prismaMock.team.findUnique.mockResolvedValueOnce(null);
+
+        const result = await getAllTeamRequests(mockedTeamOutput.owner.email, "bad");
+
+        expect(result.isError()).toBe(true);
+        expect(result.error[0].message).toBe("Team does not exist.");
+    });
+
     it("should return an array of team requests", async () => {
         prismaMock.user.findUnique.mockResolvedValueOnce(mockedTeamOutput.owner);
         prismaMock.team.findUnique.mockResolvedValueOnce(mockedTeamOutput);
@@ -166,5 +187,13 @@ describe("getAllTeamRequests function", () => {
 
         expect(result.isSuccess()).toBe(true);
         expect(result.value).toEqual([mockedFormattedTeamRequest,mockedFormattedTeamRequest]);
+    });
+});
+
+describe("mapToTeamRequestDTO function", () => {
+    it("should format a team request object correctly", async () => {
+        const formattedTeamRequest = await mapToTeamRequestDTO(mockedTeamRequestOutput);
+
+        expect(formattedTeamRequest).toEqual(mockedFormattedTeamRequest);
     });
 });

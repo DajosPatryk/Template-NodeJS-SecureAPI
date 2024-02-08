@@ -29,6 +29,10 @@ async function createTeamRequest(email, teamName, message = "") {
     const teamExists = Result.failIf(!team, "Team does not exist.", 404);
     const existenceValidation = Result.merge([userExists, teamExists]);
     if (existenceValidation.isError()) return Result.fail(existenceValidation);
+    const teamRequestExists = await prisma.teamRequest.findUnique({where: {teamId: team.id, userId: user.id}});
+    const teamRequestIsUnique = Result.failIf(!!teamRequestExists, "Team request already exists.", 409);
+    if (teamRequestIsUnique.isError()) return Result.fail(teamRequestIsUnique);
+
 
     // Creates team request
     const teamRequest = await prisma.teamRequest.create({
@@ -146,10 +150,12 @@ async function getAllTeamRequests(ownerEmail, teamName) {
     ]);
 
     // Validates existence and ownership
-    const ownerIsTeamOwner = Result.failIf(team.ownerId !== owner.id, "Forbidden. Only team owner can fetch join requests.", 403);
+    const ownerExists = Result.failIf(!owner, "Owner does not exist.", 404);
     const teamExists = Result.failIf(!team, "Team does not exist.", 404);
-    const validation = Result.merge([teamExists, ownerIsTeamOwner]);
+    const validation = Result.merge([teamExists, ownerExists]);
     if (validation.isError()) return Result.fail(validation);
+    const ownerIsTeamOwner = Result.failIf(team.ownerId !== owner.id, "Forbidden. Only team owner can delete requests.", 403);
+    if (ownerIsTeamOwner.isError()) return Result.fail(ownerIsTeamOwner);
 
     // Retrieves join requests
     const teamRequests = await prisma.teamRequest.findMany({

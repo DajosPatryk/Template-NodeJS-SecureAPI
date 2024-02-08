@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "An example restful API",
   "main": "app.js",
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
     "test": "jest --coverage",
     "build": "npm i && npx prisma generate",
@@ -14,7 +17,6 @@
     "@prisma/client": "^5.6.0",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
-    "cron": "^3.1.6",
     "dotenv": "^16.4.1",
     "express": "^4.18.2",
     "express-rate-limit": "^7.1.5",
