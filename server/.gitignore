@@ -1,0 +1,3 @@
+node_modules
+log
+# We keep env variables on github in this special case

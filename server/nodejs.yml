@@ -1,0 +1,29 @@
+name: Node.js CI/CD
+
+on:
+  push:
+    branches: [ main, master, origin, dev ]
+  pull_request:
+    branches: [ main, master, origin, dev ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - name: Set NODE_ENV to development
+        run: echo "NODE_ENV=development" >> $GITHUB_ENV
+      - name: Build
+        run: npm build
+      - name: Test
+        run: npm test

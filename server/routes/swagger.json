@@ -1,0 +1,544 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is an API for the project codename 'example_restfulapi_nodejs'.",
+    "version": "1.0.0",
+    "title": "Example Restful-API with Node.js",
+    "contact": {
+      "email": "patryk.dajos@avalonia.space"
+    }
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Authorization",
+      "description": "API authentication process."
+    },
+    {
+      "name": "User",
+      "description": "Access to user data."
+    },
+    {
+      "name": "Team",
+      "description": "Access to team data."
+    },
+    {
+      "name": "Team Join-Request",
+      "description": "Access to team request data."
+    }
+  ],
+  "securityDefinitions": {
+    "BearerAuth": {
+      "type": "apiKey",
+      "name": "authorization",
+      "in": "header",
+      "description": "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\""
+    }
+  },
+  "paths": {
+    "/api/auth/register": {
+      "post": {
+        "tags": [
+          "Authorization"
+        ],
+        "summary": "Registers user.",
+        "description": "Registers users in database and returns JWT token with payload.",
+        "operationId": "register",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "maxmustermann"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "max.mustermann@domain.co"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "xxx"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User successfully registered."
+          },
+          "400": {
+            "description": "Bad data."
+          },
+          "409": {
+            "description": "Failed registering user."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/api/auth/signin": {
+      "post": {
+        "tags": [
+          "Authorization"
+        ],
+        "summary": "Signs user in.",
+        "description": "Signs user in and returns JWT token with payload.",
+        "operationId": "signin",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "max.mustermann@domain.co"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "xxx"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User successfully signed in."
+          },
+          "401": {
+            "description": "Wrong combination of email and password, or user does not exist."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/api/user": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Retrieves all users or a specific user.",
+        "description": "Authenticated users can retrieve all users or search for a specific user with email or name query.",
+        "operationId": "getUser",
+        "produces": [
+          "application/json"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Email of the user to be fetched."
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Name of the user to be fetched."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully fetched user."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/api/team": {
+      "get": {
+        "tags": [
+          "Team"
+        ],
+        "summary": "Retrieves all teams or a specific team with details.",
+        "description": "Authenticated users can retrieve all teams or search for a specific team with teamName query.",
+        "operationId": "getTeam",
+        "produces": [
+          "application/json"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Name of the team to be fetched."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully fetched team."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Team"
+        ],
+        "summary": "Creates a team and assigns owner.",
+        "description": "Authenticated users can create teams.",
+        "operationId": "postTeam",
+        "produces": [
+          "application/json"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Cool New Team"
+                },
+                "maxMemberCount": {
+                  "type": "number",
+                  "example": 11
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully created team."
+          },
+          "400": {
+            "description": "Bad data."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Team"
+        ],
+        "summary": "Updates a team.",
+        "description": "Authenticated users can update the teams they own.",
+        "operationId": "postTeam",
+        "produces": [
+          "application/json"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "teamName": {
+                  "type": "string",
+                  "example": "Cool New Team"
+                },
+                "updateData": {
+                  "type": "object",
+                  "properties": {
+                    "maxMemberCount": {
+                      "type": "number",
+                      "example": 15
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "The Cooler Team"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully updated team."
+          },
+          "400": {
+            "description": "Bad data."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Team"
+        ],
+        "summary": "Deletes a team.",
+        "description": "Authenticated users can delete the teams they own.",
+        "operationId": "deleteTeam",
+        "produces": [
+          "application/json"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "teamName": {
+                  "type": "string",
+                  "example": "Cool New Team"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted team."
+          },
+          "400": {
+            "description": "Bad data."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/api/team/request": {
+      "get": {
+        "tags": [
+          "Team Join-Request"
+        ],
+        "summary": "Owner can retrieve all team join-requests.",
+        "description": "Authenticated users who own a team can retrieve all join requests for that team.",
+        "operationId": "getTeamRequest",
+        "produces": [
+          "application/json"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "teamName",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "Name of the team for which to fetch join requests."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully fetched team requests."
+          },
+          "400": {
+            "description": "Bad request or validation error."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Team Join-Request"
+        ],
+        "summary": "Creates a new team join-request.",
+        "description": "Authenticated users can create a request to join an existing team.",
+        "operationId": "createTeamRequest",
+        "produces": [
+          "application/json"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "teamName": {
+                  "type": "string",
+                  "example": "Team LekkerCode"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "I'd like to join your team because my dreams align with your mission."
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully created team request."
+          },
+          "400": {
+            "description": "Bad request or validation error."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Team Join-Request"
+        ],
+        "summary": "Owner can accept a team join-request.",
+        "description": "Authenticated users who own a team can accept a join request for their team.",
+        "operationId": "acceptTeamRequest",
+        "produces": [
+          "application/json"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "teamName": {
+                  "type": "string",
+                  "example": "Team LekkerCode"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "maxmustermann"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully accepted team request."
+          },
+          "400": {
+            "description": "Bad request or validation error."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Team Join-Request"
+        ],
+        "summary": "Owner can delete a team join-request.",
+        "description": "Authenticated users who own a team can delete a join request for their team.",
+        "operationId": "deleteTeamRequest",
+        "produces": [
+          "application/json"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "teamName": {
+                  "type": "string",
+                  "example": "The Cooler Team"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "maxmustermann"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted team request."
+          },
+          "400": {
+            "description": "Bad request or validation error."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    }
+  }
+}
