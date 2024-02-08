@@ -21,15 +21,20 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+          cache-dependency-path: server/package-lock.json
 
       - name: Set NODE_ENV to development
         run: echo "NODE_ENV=development" >> $GITHUB_ENV
+        working-directory: ./server
 
       - name: Install packages
         run: npm i
+        working-directory: ./server
 
       - name: Generate Prisma
         run: npx prisma generate
+        working-directory: ./server
 
       - name: Test
         run: npx jest
+        working-directory: ./server
