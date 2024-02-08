@@ -125,6 +125,7 @@ describe("createTeamRequest function", () => {
         prismaMock.user.findUnique.mockResolvedValueOnce(mockedJoinerOutput);
         prismaMock.team.findUnique.mockResolvedValueOnce(mockedFullTeam);
         prismaMock.teamRequest.create.mockResolvedValueOnce(mockedTeamRequestOutput);
+        prismaMock.teamRequest.findMany.mockResolvedValueOnce([]);
 
         const result = await createTeamRequest(mockedJoinerInput.email, mockedJoinerInput.name, mockedJoinerInput.message);
 
@@ -135,6 +136,7 @@ describe("createTeamRequest function", () => {
     it("should throw an error if the team owner attempts to join their own team", async () => {
         prismaMock.user.findUnique.mockResolvedValueOnce(mockedTeamOutput.owner);
         prismaMock.team.findUnique.mockResolvedValueOnce(mockedTeamOutput);
+        prismaMock.teamRequest.findMany.mockResolvedValueOnce([]);
 
         const result = await createTeamRequest(mockedTeamOutput.owner.email, mockedTeamOutput.name);
 
@@ -145,6 +147,7 @@ describe("createTeamRequest function", () => {
     it("should throw an error if an existing team member attempts to join the same team", async () => {
         prismaMock.user.findUnique.mockResolvedValueOnce(mockedTeamOutput.memberships[0].user);
         prismaMock.team.findUnique.mockResolvedValueOnce(mockedTeamOutput);
+        prismaMock.teamRequest.findMany.mockResolvedValueOnce([]);
 
         const result = await createTeamRequest(mockedTeamOutput.memberships[0].user.email, mockedTeamOutput.name);
 
@@ -155,6 +158,7 @@ describe("createTeamRequest function", () => {
     it("should create a team request successfully", async () => {
         prismaMock.user.findUnique.mockResolvedValueOnce(mockedJoinerOutput);
         prismaMock.team.findUnique.mockResolvedValueOnce(mockedTeamOutput);
+        prismaMock.teamRequest.findMany.mockResolvedValueOnce([]);
         prismaMock.teamRequest.create.mockResolvedValueOnce(mockedTeamRequestOutput);
 
         const result = await createTeamRequest(mockedJoinerInput.email, mockedJoinerInput.name, mockedJoinerInput.message);

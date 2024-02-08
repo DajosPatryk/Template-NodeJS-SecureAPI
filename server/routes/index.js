@@ -136,7 +136,6 @@ router.put("/api/team", authenticateToken, async (req, res, next) => {
 
     } catch (error) {
         next(error);
-
     }
 })
 
@@ -197,7 +196,6 @@ router.post("/api/team/request", authenticateToken, async (req, res, next) => {
 
     } catch (error) {
         next(error);
-
     }
 })
 
