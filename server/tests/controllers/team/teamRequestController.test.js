@@ -28,6 +28,7 @@ const mockedTeamOutput = {
     },
     memberships: [
         {
+            userId: "mockedUserId",
             user: {
                 id: "mockedUserId",
                 name: "MemberOne",
@@ -37,6 +38,7 @@ const mockedTeamOutput = {
             }
         },
         {
+            userId: "mockedUserId2",
             user: {
                 id: "mockedUserId2",
                 name: "MemberTwo",
@@ -44,6 +46,13 @@ const mockedTeamOutput = {
                 hashedPassword: "hashedPassword",
                 score: 30
             }
+        }
+    ],
+    requests: [
+        {
+            id: "mockedId",
+            teamId: "mockedTeamId",
+            userId: "mockedUserId"
         }
     ]
 };
@@ -95,15 +104,52 @@ describe("createTeamRequest function", () => {
     });
 
     it("should throw an error if team request is not unique", async () => {
-        prismaMock.teamRequest.findUnique.mockResolvedValueOnce(mockedTeamRequestOutput);
+        prismaMock.teamRequest.findMany.mockResolvedValueOnce(mockedTeamRequestOutput);
         prismaMock.user.findUnique.mockResolvedValueOnce(mockedJoinerOutput);
         prismaMock.team.findUnique.mockResolvedValueOnce(mockedTeamOutput);
         prismaMock.teamRequest.create.mockResolvedValueOnce(mockedTeamRequestOutput);
 
-        const result = await createTeamRequest(mockedJoinerInput.email, mockedJoinerInput.name, "Please let me join");
+        const result = await createTeamRequest(mockedJoinerInput.email, mockedJoinerInput.name, mockedJoinerInput.message);
 
         expect(result.isError()).toBe(true);
         expect(result.error[0].message).toBe("Team request already exists.");
+    });
+
+    it("should throw an error if the team is full", async () => {
+        const mockedFullTeam = {
+            ...mockedTeamOutput,
+            maxMemberCount: 2,
+            memberships: [{ userId: 'some-user-id-1' }, { userId: 'some-user-id-2' }],
+            requests: []
+        };
+        prismaMock.user.findUnique.mockResolvedValueOnce(mockedJoinerOutput);
+        prismaMock.team.findUnique.mockResolvedValueOnce(mockedFullTeam);
+        prismaMock.teamRequest.create.mockResolvedValueOnce(mockedTeamRequestOutput);
+
+        const result = await createTeamRequest(mockedJoinerInput.email, mockedJoinerInput.name, mockedJoinerInput.message);
+
+        expect(result.isError()).toBe(true);
+        expect(result.error[0].message).toBe("Team is full or has too many pending requests.");
+    });
+
+    it("should throw an error if the team owner attempts to join their own team", async () => {
+        prismaMock.user.findUnique.mockResolvedValueOnce(mockedTeamOutput.owner);
+        prismaMock.team.findUnique.mockResolvedValueOnce(mockedTeamOutput);
+
+        const result = await createTeamRequest(mockedTeamOutput.owner.email, mockedTeamOutput.name);
+
+        expect(result.isError()).toBe(true);
+        expect(result.error[0].message).toBe("Team owners cannot join their own team.");
+    });
+
+    it("should throw an error if an existing team member attempts to join the same team", async () => {
+        prismaMock.user.findUnique.mockResolvedValueOnce(mockedTeamOutput.memberships[0].user);
+        prismaMock.team.findUnique.mockResolvedValueOnce(mockedTeamOutput);
+
+        const result = await createTeamRequest(mockedTeamOutput.memberships[0].user.email, mockedTeamOutput.name);
+
+        expect(result.isError()).toBe(true);
+        expect(result.error[0].message).toBe("User is already a member of the team.");
     });
 
     it("should create a team request successfully", async () => {
@@ -111,7 +157,7 @@ describe("createTeamRequest function", () => {
         prismaMock.team.findUnique.mockResolvedValueOnce(mockedTeamOutput);
         prismaMock.teamRequest.create.mockResolvedValueOnce(mockedTeamRequestOutput);
 
-        const result = await createTeamRequest(mockedJoinerInput.email, mockedJoinerInput.name, "Please let me join");
+        const result = await createTeamRequest(mockedJoinerInput.email, mockedJoinerInput.name, mockedJoinerInput.message);
 
         expect(result.isSuccess()).toBe(true);
     });

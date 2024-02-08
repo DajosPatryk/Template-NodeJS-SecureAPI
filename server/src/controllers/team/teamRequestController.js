@@ -21,7 +21,7 @@ async function createTeamRequest(email, teamName, message = "") {
     // Retrieves user and team
     const [user, team] = await Promise.all([
         prisma.user.findUnique({where: {email: email}}),
-        prisma.team.findUnique({where: {name: teamName}})
+        prisma.team.findUnique({where: {name: teamName}, include: {memberships: true, requests: true}})
     ]);
 
     // Validates existence
@@ -29,9 +29,18 @@ async function createTeamRequest(email, teamName, message = "") {
     const teamExists = Result.failIf(!team, "Team does not exist.", 404);
     const existenceValidation = Result.merge([userExists, teamExists]);
     if (existenceValidation.isError()) return Result.fail(existenceValidation);
-    const teamRequestExists = await prisma.teamRequest.findUnique({where: {teamId: team.id, userId: user.id}});
-    const teamRequestIsUnique = Result.failIf(!!teamRequestExists, "Team request already exists.", 409);
+    const teamRequestExists = await prisma.teamRequest.findMany({where: {teamId: team.id, userId: user.id}});
+    const teamRequestIsUnique = Result.failIf(teamRequestExists.length !== 0, "Team request already exists.", 409);
     if (teamRequestIsUnique.isError()) return Result.fail(teamRequestIsUnique);
+
+    // Validates requests and memberships
+    const isOwner = Result.failIf(team.ownerId === user.id, "Team owners cannot join their own team.", 409);
+    const memberExists = team.memberships.some(membership => membership.userId === user.id);
+    const isMember = Result.failIf(memberExists, "User is already a member of the team.", 409);
+    const currentMemberCount = team.memberships.length + team.requests.length;
+    const teamIsFull = Result.failIf(currentMemberCount >= team.maxMemberCount, "Team is full or has too many pending requests.", 409);
+    const requestsMembershipsValidation = Result.merge([isOwner, isMember, teamIsFull]);
+    if (requestsMembershipsValidation.isError()) return Result.fail(requestsMembershipsValidation);
 
 
     // Creates team request

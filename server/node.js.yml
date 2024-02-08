@@ -1,4 +1,4 @@
-name: Node.js CI/CD
+name: On-Push CI
 
 on: [push]
 
@@ -11,8 +11,6 @@ jobs:
         node-version: [18.x]
 
     steps:
-      - uses: ./server
-
       - uses: actions/checkout@v3
 
       - name: Use Node.js ${{ matrix.node-version }}
@@ -20,12 +18,20 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+          cache-dependency-path: server/package-lock.json
 
       - name: Set NODE_ENV to development
         run: echo "NODE_ENV=development" >> $GITHUB_ENV
+        working-directory: ./server
 
-      - name: Build
-        run: npm build
+      - name: Install packages
+        run: npm i
+        working-directory: ./server
+
+      - name: Generate Prisma
+        run: npx prisma generate
+        working-directory: ./server
 
       - name: Test
-        run: npm test
+        run: npx jest
+        working-directory: ./server
