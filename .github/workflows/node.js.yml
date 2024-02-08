@@ -19,19 +19,14 @@ jobs:
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
-          path: ./server/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('server/package-lock.json') }}
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
       - name: Set NODE_ENV to development
         run: echo "NODE_ENV=development" >> $GITHUB_ENV
-        working-directory: ./server
 
       - name: Build
-        run: npm build
-        working-directory: ./server
+        run: cd ./server && npm build
 
       - name: Test
-        run: npm test
-        working-directory: ./server
+        run: cd ./server && npm test
