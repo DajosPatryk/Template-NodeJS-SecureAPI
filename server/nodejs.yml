@@ -21,9 +21,15 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+
       - name: Set NODE_ENV to development
         run: echo "NODE_ENV=development" >> $GITHUB_ENV
+        working-directory: ./server
+
       - name: Build
         run: npm build
+        working-directory: ./server
+
       - name: Test
         run: npm test
+        working-directory: ./server
