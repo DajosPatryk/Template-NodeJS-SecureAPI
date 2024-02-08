@@ -1,6 +1,6 @@
 # Example Restful-API in Node.js
-This is a basic example for a restful API server developed in Node.js backend 🌱<br/>
-I kept env variables and secrets on GitHub for testing purposes.
+This is a basic template/example for a restful API server developed in Node.js backend 🌱<br/>
+I kept env variables and secrets on GitHub for testing purposes 📐✏️👷‍♀️<br/>
 
 ## Technology used
 - Express.js framework
