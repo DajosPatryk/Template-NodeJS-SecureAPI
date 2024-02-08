@@ -28,9 +28,7 @@ router.post("/api/auth/register", async (req, res, next) => {
             res.status(400).json(result.error);
         }
     } catch (error) {
-        errorFactory(`Internal server error: ${error.message}`, 500, `Internal server error: ${error.message}`, 500, error, req);
-        res.status(500).json({message: "Internal server error.", code: 500});
-
+        next(error);
     }
 });
 
@@ -49,8 +47,7 @@ router.post("/api/auth/signin", async (req, res, next) => {
         }
 
     } catch (error) {
-        errorFactory(`Internal server error: ${error.message}`, 500, `Internal server error: ${error.message}`, 500, error, req);
-        res.status(500).json({message: "Internal server error.", code: 500});
+        next(error);
     }
 });
 
@@ -74,8 +71,7 @@ router.get("/api/user", authenticateToken, async (req, res, next) => {
         }
 
     } catch (error) {
-        errorFactory(`Internal server error: ${error.message}`, 500, `Internal server error: ${error.message}`, 500, error, req);
-        res.status(500).json({message: "Internal server error.", code: 500});
+        next(error);
     }
 });
 
@@ -99,8 +95,7 @@ router.get("/api/team", authenticateToken, async (req, res, next) => {
         }
 
     } catch (error) {
-        errorFactory(`Internal server error.`, 500, `Internal server error: ${error.message}`, 500, error, req);
-        res.status(500).json({message: "Internal server error.", code: 500});
+        next(error);
     }
 })
 
@@ -120,9 +115,7 @@ router.post("/api/team", authenticateToken, async (req, res, next) => {
         }
 
     } catch (error) {
-        errorFactory(`Internal server error: ${error.message}`, 500, `Internal server error: ${error.message}`, 500, error, req);
-        res.status(500).json({message: "Internal server error.", code: 500});
-
+        next(error);
     }
 })
 
@@ -142,8 +135,7 @@ router.put("/api/team", authenticateToken, async (req, res, next) => {
         }
 
     } catch (error) {
-        errorFactory(`Internal server error: ${error.message}`, 500, `Internal server error: ${error.message}`, 500, error, req);
-        res.status(500).json({message: "Internal server error.", code: 500});
+        next(error);
 
     }
 })
@@ -164,8 +156,7 @@ router.delete("/api/team", authenticateToken, async (req, res, next) => {
         }
 
     } catch (error) {
-        errorFactory(`Internal server error: ${error.message}`, 500, `Internal server error: ${error.message}`, 500, error, req);
-        res.status(500).json({message: "Internal server error.", code: 500});
+        next(error);
     }
 })
 
@@ -185,8 +176,7 @@ router.get("/api/team/request", authenticateToken, async (req, res, next) => {
         }
 
     } catch (error) {
-        errorFactory(`Internal server error: ${error.message}`, 500, `Internal server error: ${error.message}`, 500, error, req);
-        res.status(500).json({message: "Internal server error.", code: 500});
+        next(error);
     }
 })
 
@@ -206,8 +196,7 @@ router.post("/api/team/request", authenticateToken, async (req, res, next) => {
         }
 
     } catch (error) {
-        errorFactory(`Internal server error: ${error.message}`, 500, `Internal server error: ${error.message}`, 500, error, req);
-        res.status(500).json({message: "Internal server error.", code: 500});
+        next(error);
 
     }
 })
@@ -228,8 +217,7 @@ router.put("/api/team/request", authenticateToken, async (req, res, next) => {
         }
 
     } catch (error) {
-        errorFactory(`Internal server error: ${error.message}`, 500, `Internal server error: ${error.message}`, 500, error, req);
-        res.status(500).json({message: "Internal server error.", code: 500});
+        next(error);
     }
 })
 
@@ -249,8 +237,7 @@ router.delete("/api/team/request", authenticateToken, async (req, res, next) => 
         }
 
     } catch (error) {
-        errorFactory(`Internal server error: ${error.message}`, 500, `Internal server error: ${error.message}`, 500, error, req);
-        res.status(500).json({message: "Internal server error.", code: 500});
+        next(error);
     }
 })
 

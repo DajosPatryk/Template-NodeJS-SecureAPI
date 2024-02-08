@@ -8,6 +8,7 @@ const fs = require('fs');
 const cors = require("cors");
 const { rateLimit } = require("express-rate-limit");
 const { requestLoggerMiddleware: { logRequests } } = require("./src/middleware");
+const { errorHandlerAfterRoute: { handleErrorAfterRoute } } = require("./src/middleware");
 const { dateFormatter } = require("./src/utils");
 const winston = require('winston');
 const express = require("express");
@@ -99,6 +100,7 @@ const indexRouter = require("./routes/index");
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
+app.use(handleErrorAfterRoute);
 
 /**
  * App start

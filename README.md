@@ -26,7 +26,7 @@ I kept env variables and secrets on GitHub for testing purposes 📐✏️👷�
 - **Swagger documentation** - Swagger documentation ready for testing.
 - **Heroku-Ready configuration** - Configured a basic Heroku-ready Procfile.
 - **Pipeline configuration** - Configured a basic GitHub-ready pipeline for testing.
-- **Docker configuration** - Configured a basic Docker-ready Dockerfile.
+- **Docker configuration** - Configured basic Docker-ready files.
 
 ## How to run
 - cd ./server
@@ -35,8 +35,8 @@ I kept env variables and secrets on GitHub for testing purposes 📐✏️👷�
 - npm start
 #### **OR**
 - cd ./server
-- docker build -t example-restfulapi-nodejs .
-- docker run -p 3000:3000 example-restfulapi-nodejs
+- docker-compose build --no-cache
+- docker-compose up -d
 
 ## How to test
 - npm test
@@ -51,7 +51,6 @@ I kept env variables and secrets on GitHub for testing purposes 📐✏️👷�
 - **Save user ranks to database** - If the database was big, simply running through the entire user list determining ranks would cause performance issues.
 - **Error classes** - I kept it basic. Instead of an Error Factory, I'd define custom error classes extending error, those would also not log automatically. Like so: https://www.toptal.com/nodejs/node-js-error-handling
 - **More precise handling of internal errors** - I kept it basic, all internal errors are 500, this is not best-practice.
-- **Error handling middleware** - Instead of handling errors locally, I would use a centralized error-handling middleware in Express.
 - **Expand authorization** - I kept it basic. I would add token-cookies, email validation, password resets, MFA, OAuth and expand on data validation.
 - **Setup better logging middleware** - I kept logging basic, for better monitoring I would expand it and add rounds.
 - **Opt for contexts for database mocking** - I kept it basic. I would create contexts for the database instead of using a singleton.

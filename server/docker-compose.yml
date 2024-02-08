@@ -1,0 +1,17 @@
+version: '2.24.5'
+
+services:
+  example-restfulapi-nodejs:
+    container_name: example-restfulapi-nodejs
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - .:/app
+      - /app/node_modules
+    working_dir: /app
+    command: npm start
