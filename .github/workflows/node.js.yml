@@ -19,6 +19,8 @@ jobs:
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
+          path: ./server/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('server/package-lock.json') }}
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
