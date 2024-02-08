@@ -13,6 +13,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Change directory
+        run: cd ./server
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -21,9 +24,6 @@ jobs:
 
       - name: Set NODE_ENV to development
         run: echo "NODE_ENV=development" >> $GITHUB_ENV
-
-      - name: Change directory
-        run: cd ./server
 
       - name: Build
         run: npm build
