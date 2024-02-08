@@ -1,4 +1,4 @@
-name: Node.js CI/CD
+name: On-Push Testing
 
 on: [push]
 
@@ -11,8 +11,6 @@ jobs:
         node-version: [18.x]
 
     steps:
-      - uses: ./server
-
       - uses: actions/checkout@v3
 
       - name: Use Node.js ${{ matrix.node-version }}
@@ -20,19 +18,15 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-          cache-dependency-path: ${{ env.WORKING_DIRECTORY }}/package-lock.json
-
-      - name: Set working directory
-        id: set-directory
-        run: echo "WORKING_DIRECTORY=./server" >> $GITHUB_ENV
 
       - name: Set NODE_ENV to development
         run: echo "NODE_ENV=development" >> $GITHUB_ENV
 
+      - name: Change directory
+        run: cd ./server
+
       - name: Build
         run: npm build
-        working-directory: ${{ env.WORKING_DIRECTORY }}
 
       - name: Test
         run: npm test
-        working-directory: ${{ env.WORKING_DIRECTORY }}
