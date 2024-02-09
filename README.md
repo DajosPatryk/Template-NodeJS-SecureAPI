@@ -47,7 +47,7 @@ I kept env variables and secrets on GitHub for testing purposes 📐✏️👷�
 
 ## What could be improved
 - **Response time** - Response time averages at 100ms on my local machine. This is acceptable. I would instead opt for a local database instance to make this faster.
-- **Optimal response times** - In order to achieve optimal response times, I would eliminate Prisma altogether.
+- **Optimal response times** - In order to achieve optimal response times, I would eliminate Prisma altogether and run **Bun** instead of Nodejs.
 - **Save user ranks to database** - If the database was big, simply running through the entire user list determining ranks would cause performance issues.
 - **Error classes** - I kept it basic. Instead of an Error Factory, I'd define custom error classes extending error, those would also not log automatically. Like so: https://www.toptal.com/nodejs/node-js-error-handling
 - **More precise handling of internal errors** - I kept it basic, all internal errors are 500, this is not best-practice.
