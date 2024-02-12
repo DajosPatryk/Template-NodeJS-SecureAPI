@@ -57,11 +57,7 @@ app.use(logRequests); // Logs HTTP requests
 process.on("uncaughtException", (error) => {
   console.error("Uncaught exception:", error);
 
-  try {
-    var { stack, message, ...errorDetails } = error;
-  } catch (error) {
-    var stack = null, message = null, errorDetails = null;
-  }
+  var { stack = null, message = null, ...errorDetails } = error;
   errorFactory(500, `Uncaught exception: ${message}`, error);
 });
 process.on("unhandledRejection", (reason, promise) => {
