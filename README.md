@@ -1,4 +1,4 @@
-# Example Restful-API in Node.js
+# Template-NodeJS-SecureAPI
 This is a basic template/example for a restful API server developed in Node.js backend 🌱<br/>
 
 ## Technology used
