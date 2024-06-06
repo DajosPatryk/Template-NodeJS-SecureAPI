@@ -41,6 +41,7 @@ function errorFactory(externalMessage, externalCode, internalMessage = externalM
         stack: stack || newError.stack || "N/A"
     });
 
+    if(process.env.NODE_ENV === "development") console.error(error ? error : newError);
     return newError;
 }
 
